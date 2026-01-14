@@ -6,6 +6,7 @@
 #include <WebServer.h>
 #include <Preferences.h>
 #include "Html.h"
+#include <esp_event.h>
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
@@ -15,33 +16,12 @@ WakeOnLan WOL(UDP);
 Preferences prefs;
 WebServer server(80);
 
+#define CONFIG_PIN 10
+#define LED_PIN LED_BUILTIN
+
 String wifi_ssid = "";
 String wifi_pass = "";
 String mqtt_ip = "";
 int mqtt_port = 1883;
 bool configMode = false;
-
-void setup() {
-  Serial.begin(115200);
-  prefs.begin("config", true);
-  wifi_ssid = prefs.getString("ssid", "");
-  prefs.end();
-  if (wifi_ssid.length() == 0) {
-    configMode = true;
-    startConfigAP();
-  } else {
-    configMode = false;
-    setup_wifi();
-    mqttClient.setServer(mqtt_ip.c_str(), mqtt_port);
-    mqttClient.setCallback(mqttCallback);
-    WOL.setRepeat(1, 100);
-  }
-}
-void loop() {
-  if (configMode) {
-    server.handleClient();
-    return;
-  }
-  if (!mqttClient.connected()) { reconnectMQTT(); }
-  mqttClient.loop();
-}
+unsigned long lastReconnect = 0;

@@ -1,23 +1,39 @@
-void setup_wifi() {
-  delay(10);
-  Serial.println();
-  Serial.print("正在连接到 ");
-  Serial.println(wifi_ssid);
-  WiFi.begin(wifi_ssid, wifi_pass);
-  unsigned long startTime = millis();
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    delay(500);
-    if (millis() - startTime > 60000) {
-      Serial.println("\nWiFi 连接超时，进入 AP 配置模式...");
-      configMode = true;
-      startConfigAP();
-      return;
+bool needReconnect = false;
+void WiFiEvent(arduino_event_id_t event) {
+    switch (event) {
+        case ARDUINO_EVENT_WIFI_STA_START:
+            Serial.println("WiFi started");
+            break;
+        case ARDUINO_EVENT_WIFI_STA_CONNECTED:
+            Serial.println("WiFi connected");
+            break;
+        case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
+            Serial.println("WiFi disconnected");
+            needReconnect = true;
+            break;
+        case ARDUINO_EVENT_WIFI_STA_GOT_IP:
+            Serial.print("Got IP: ");
+            Serial.println(WiFi.localIP());
+            needReconnect = false;
+            break;
+        default:
+            // Serial.printf("Event: %d\n", event);
+            break;
     }
+}
+
+void setup_wifi() {
+  WiFi.onEvent(WiFiEvent);
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(wifi_ssid, wifi_pass);
+  Serial.println("Connecting WiFi...");
+}
+void WifiHeart() {
+  if (needReconnect && millis() - lastReconnect > 5000) {
+    Serial.println("Heartbeat: forcing reconnect...");
+    WiFi.disconnect(true);
+    delay(100);
+    WiFi.begin(wifi_ssid, wifi_pass);
+    lastReconnect = millis();
   }
-  Serial.println("");
-  Serial.println("Wi-Fi连接成功");
-  Serial.print("IP地址: ");
-  Serial.println(WiFi.localIP());
-  calculateBroadcastAddress();
 }
