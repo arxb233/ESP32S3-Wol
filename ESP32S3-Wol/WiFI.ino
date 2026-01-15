@@ -44,7 +44,6 @@ void WifiHeart() {
   unsigned long now = millis();
   if (needReconnect && (now - wifiReconnectTime > 5000)) {
     Serial.println("Heartbeat: 强制重新连接...");
-    Serial.println(wifiReconnectTime);
     WiFi.disconnect(true);
     delay(100);
     Serial.println(wifi_ssid);
