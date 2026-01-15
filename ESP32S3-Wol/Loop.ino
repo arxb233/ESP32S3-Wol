@@ -5,5 +5,5 @@ void loop() {
     return;
   }
   WifiHeart();
-  //MQTTHeart();
+  MQTTHeart();
 }

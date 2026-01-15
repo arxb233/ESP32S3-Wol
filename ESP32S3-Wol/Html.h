@@ -31,7 +31,7 @@ const char INDEX_HTML[] PROGMEM = R"=====(
       <input name='ssid' type='text' placeholder='路由器名称'>
 
       <label>WiFi 密码：</label>
-      <input name='pass' type='password' placeholder='路由器密码'>
+      <input name='pass' type='text' placeholder='路由器密码'>
 
       <label>MQTT 服务器 IP：</label>
       <input name='mqttip' type='text' placeholder='192.168.1.10'>

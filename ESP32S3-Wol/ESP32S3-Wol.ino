@@ -6,7 +6,6 @@
 #include <WebServer.h>
 #include <Preferences.h>
 #include "Html.h"
-#include <esp_event.h>
 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
@@ -24,4 +23,3 @@ String wifi_pass = "";
 String mqtt_ip = "";
 int mqtt_port = 1883;
 bool configMode = false;
-unsigned long lastReconnect = 0;
