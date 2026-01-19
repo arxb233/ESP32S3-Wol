@@ -3,6 +3,7 @@ unsigned long MQTTReconnectTime = 0;
 void setup_mqtt() {
   mqttClient.setServer(mqtt_ip.c_str(), mqtt_port);
   mqttClient.setCallback(mqttCallback);
+  mqttClient.setKeepAlive(60);
   WOL.setRepeat(1, 100);
 }
 void mqttCallback(char* topic, byte* payload, unsigned int length) {

@@ -30,6 +30,7 @@ void WiFiEvent(WiFiEvent_t event) {
 void setup_wifi() {
   WiFi.disconnect(true);
   delay(1000);
+  WiFi.setSleep(true);
   WiFi.onEvent(WiFiEvent);
   WiFi.onEvent([](WiFiEvent_t event, WiFiEventInfo_t info) {
     Serial.print("[WiFi] 断线，原因码: ");

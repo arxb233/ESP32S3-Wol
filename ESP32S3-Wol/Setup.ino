@@ -8,6 +8,7 @@ void setup() {
   wifi_pass = prefs.getString("pass", "");
   mqtt_ip = prefs.getString("mqttip", "");
   mqtt_port = prefs.getInt("mqttport", 1883);
-  prefs.end();
+  prefs.end(); 
+  setCpuFrequencyMhz(80);  
   checkConfigMode();
 }
