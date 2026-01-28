@@ -37,7 +37,7 @@ const char INDEX_HTML[] PROGMEM = R"=====(
       <input name='mqttip' type='text' placeholder='192.168.1.10'>
 
       <label>MQTT 端口：</label>
-      <input name='mqttport' type='number' value='1883'>
+      <input name='mqttport' type='number' value='8883'>
 
       <input type='submit' value='保存配置'>
     </form>

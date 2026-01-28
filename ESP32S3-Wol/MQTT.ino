@@ -1,6 +1,7 @@
 const char* mqtt_topic_sub = "wol/command";
 unsigned long MQTTReconnectTime = 0;
 void setup_mqtt() {
+  espClient.setInsecure();
   mqttClient.setServer(mqtt_ip.c_str(), mqtt_port);
   mqttClient.setCallback(mqttCallback);
   mqttClient.setKeepAlive(60);
@@ -17,11 +18,12 @@ void MQTTHeart() {
   if (!mqttClient.connected() && millis() - MQTTReconnectTime > 5000) {
     Serial.print("尝试连接MQTT服务器...");
     String clientId = "ESP32-WOL-Gateway-" + String((uint32_t)ESP.getEfuseMac(), HEX);
-    if (mqttClient.connect(clientId.c_str())) {
+    if (mqttClient.connect(clientId.c_str(),wifi_ssid.c_str(),wifi_pass.c_str())) {
       Serial.println("连接成功!");
       mqttClient.subscribe(mqtt_topic_sub);
       Serial.print("已订阅主题: ");
       Serial.println(mqtt_topic_sub);
+      MQTTReconnectTime = millis();
     } else {
       Serial.print("失败， rc=");
       Serial.print(mqttClient.state());
